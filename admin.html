@@ -118,37 +118,36 @@ async function send(){
   button.disabled = true;
   status.textContent = "送信中...";
 
-  try{
+ try{
 
-    const response = await fetch(API_URL,{
-      method:"POST",
-      body:JSON.stringify({
-        name:"OWNER",
-        comment:comment,
-        adminPassword:ADMIN_PASSWORD
-      })
-    });
+  const response = await fetch(API_URL,{
+    method:"POST",
+    body:JSON.stringify({
+      name:"OWNER",
+      comment:comment,
+      adminPassword:ADMIN_PASSWORD
+    })
+  });
 
-    const result = await response.json();
+  const result = await response.text();
 
-    console.log(result);
+  console.log(result);
 
-    document.getElementById("comment").value = "";
+  document.getElementById("comment").value = "";
 
-    status.textContent = "✅ 投稿しました";
+  status.textContent = "✅ 投稿しました";
 
-  }catch(error){
+}catch(error){
 
-    console.error(error);
+  console.error(error);
 
-    status.textContent =
-      "❌ 送信失敗";
+  status.textContent = "❌ 送信失敗";
 
-    alert(
-      "送信失敗\n\n" +
-      error.message
-    );
-  }
+  alert(
+    "送信失敗\n\n" +
+    error.message
+  );
+}
 
   button.disabled = false;
 }
