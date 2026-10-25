@@ -81,7 +81,7 @@ placeholder="コメント"></textarea>
 const API_URL =
 "https://script.google.com/macros/s/あなたのURL/exec";
 
-async function send(){
+async function send() {
 
   const name =
     document.getElementById("name").value.trim();
@@ -89,8 +89,13 @@ async function send(){
   const comment =
     document.getElementById("comment").value.trim();
 
-  if(!name || !comment){
-    alert("入力してください");
+  if (!name || !comment) {
+    alert("名前とコメントを入力してください");
+    return;
+  }
+
+  if (name.toUpperCase() === "Owner") {
+    alert("この名前は使用できません");
     return;
   }
 
@@ -107,7 +112,6 @@ async function send(){
 
   alert("投稿しました");
 }
-
 </script>
 
 </body>
