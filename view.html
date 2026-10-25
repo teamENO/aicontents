@@ -21,12 +21,14 @@ async function loadComments() {
 
   for(let i = 1; i < data.length; i++) {
 
-    const comment = String(data[i][2])
-      .replace(/\n/g, "<br>");
+    const name = escapeHtml(data[i][1]);
+
+    const comment = escapeHtml(data[i][2])
+      .replace(/\r?\n/g, "<br>");
 
     html += `
-      <div>
-        <b>${data[i][1]}</b><br>
+      <div class="comment">
+        <b>${name}</b><br>
         ${comment}
         <hr>
       </div>
@@ -36,9 +38,17 @@ async function loadComments() {
   document.getElementById("comments").innerHTML = html;
 }
 
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 loadComments();
-setInterval(loadComments, 5000);
-</script>
+setInterval(loadComments, 5000);</script>
 
 </body>
 </html>
