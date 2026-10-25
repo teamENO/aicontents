@@ -56,10 +56,7 @@ button{
 
 <h2>👑 Admin投稿</h2>
 
-<input id="name"
-placeholder="名前">
 
-<br><br>
 
 <textarea id="comment"
 placeholder="コメント"></textarea>
@@ -76,10 +73,10 @@ placeholder="コメント"></textarea>
 <script>
 
 const API_URL =
-"https://script.google.com/macros/s/あなたのURL/exec";
+"https://script.google.com/macros/s/AKfycbzh8H0pzgkAJ1jUOW1POgQRuS6malzSD69hbMc-39WiVi7POo23paWHTThWt5FCb_Nj5Q/exec";
 
 const ADMIN_PASSWORD =
-"好きなパスワード";
+"owner";
 
 async function send(){
 
@@ -90,13 +87,13 @@ async function send(){
     document.getElementById("comment").value.trim();
 
   await fetch(API_URL,{
-    method:"POST",
-    body:JSON.stringify({
-      name,
-      comment,
-      adminPassword: ADMIN_PASSWORD
-    })
-  });
+  method:"POST",
+  body:JSON.stringify({
+    name: "OWNER",
+    comment,
+    adminPassword: ADMIN_PASSWORD
+  })
+});
 
   document.getElementById("name").value="";
   document.getElementById("comment").value="";
