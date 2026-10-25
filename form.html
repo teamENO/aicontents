@@ -2,53 +2,104 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>コメント投稿</title>
 
 <style>
-body{
-  background:#f5f7fa;
-  font-family:sans-serif;
-  padding:20px;
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: "Segoe UI", sans-serif;
+  background: #f5f7fa;
 }
 
-.container{
-  max-width:700px;
-  margin:auto;
+.container {
+  max-width: 700px;
+  margin: 0 auto;
 }
 
-.card{
-  background:white;
-  padding:20px;
-  border-radius:12px;
-  box-shadow:0 2px 8px rgba(0,0,0,.08);
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
 
-input,textarea{
-  width:100%;
-  padding:12px;
-  box-sizing:border-box;
-  border:1px solid #ccc;
-  border-radius:8px;
+h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 25px;
 }
 
-textarea{
-  min-height:150px;
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
 }
 
-button{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  background:#0078d4;
-  color:white;
-  cursor:pointer;
+input,
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 16px;
 }
 
-button:hover{
-  background:#106ebe;
+textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
+button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background: #0078d4;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+
+  transition:
+    transform .15s ease,
+    background .15s ease,
+    box-shadow .15s ease;
+}
+
+button:hover {
+  background: #106ebe;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,120,212,.3);
+}
+
+button:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+button:disabled {
+  background: #999;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+#status {
+  margin-top: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.counter {
+  text-align: right;
+  color: #888;
+  font-size: 12px;
+  margin-top: 5px;
 }
 </style>
 </head>
@@ -56,24 +107,42 @@ button:hover{
 <body>
 
 <div class="container">
-<div class="card">
 
-<h2>コメント投稿</h2>
+  <div class="card">
 
-<input id="name" placeholder="名前">
+    <h2>コメント投稿</h2>
 
-<br><br>
+    <label>名前</label>
 
-<textarea id="comment"
-placeholder="コメント"></textarea>
+    <input
+      type="text"
+      id="name"
+      maxlength="30"
+      placeholder="名前を入力">
 
-<br><br>
+    <br><br>
 
-<button onclick="send()">
-投稿
-</button>
+    <label>コメント</label>
 
-</div>
+    <textarea
+      id="comment"
+      maxlength="500"
+      placeholder="コメントを入力"></textarea>
+
+    <div class="counter">
+      <span id="count">0</span>/500
+    </div>
+
+    <button
+      id="submitBtn"
+      onclick="send()">
+      投稿
+    </button>
+
+    <div id="status"></div>
+
+  </div>
+
 </div>
 
 <script>
@@ -81,37 +150,86 @@ placeholder="コメント"></textarea>
 const API_URL =
 "https://script.google.com/macros/s/AKfycbzh8H0pzgkAJ1jUOW1POgQRuS6malzSD69hbMc-39WiVi7POo23paWHTThWt5FCb_Nj5Q/exec";
 
+const commentBox =
+  document.getElementById("comment");
+
+commentBox.addEventListener("input", () => {
+
+  document.getElementById("count").textContent =
+    commentBox.value.length;
+
+});
+
 async function send() {
 
   const name =
-    document.getElementById("name").value.trim();
+    document.getElementById("name")
+      .value.trim();
 
   const comment =
-    document.getElementById("comment").value.trim();
+    document.getElementById("comment")
+      .value.trim();
 
   if (!name || !comment) {
     alert("名前とコメントを入力してください");
     return;
   }
 
-  if (name.toUpperCase() === "Owner") {
+  if (name.toUpperCase() === "OWNER") {
     alert("この名前は使用できません");
     return;
   }
 
-  await fetch(API_URL,{
-    method:"POST",
-    body:JSON.stringify({
-      name,
-      comment
-    })
-  });
+  const button =
+    document.getElementById("submitBtn");
 
-  document.getElementById("name").value="";
-  document.getElementById("comment").value="";
+  const status =
+    document.getElementById("status");
 
-  alert("投稿しました");
+  button.disabled = true;
+  button.textContent = "送信中...";
+
+  try {
+
+    await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify({
+        name: name,
+        comment: comment
+      })
+    });
+
+    status.textContent = "✅ 投稿しました";
+    status.style.color = "green";
+
+    document.getElementById("name").value = "";
+    document.getElementById("comment").value = "";
+    document.getElementById("count").textContent = "0";
+
+    button.textContent = "✓ 投稿完了";
+
+    setTimeout(() => {
+      button.textContent = "投稿";
+      button.disabled = false;
+    }, 1000);
+
+  } catch (error) {
+
+    console.error(error);
+
+    status.textContent = "❌ 投稿に失敗しました";
+    status.style.color = "red";
+
+    button.textContent = "投稿失敗";
+
+    setTimeout(() => {
+      button.textContent = "投稿";
+      button.disabled = false;
+    }, 1000);
+
+  }
 }
+
 </script>
 
 </body>
