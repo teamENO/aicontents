@@ -19,11 +19,15 @@ async function loadComments() {
 
   let html = "";
 
-  for (let i = 1; i < data.length; i++) {
+  for(let i = 1; i < data.length; i++) {
+
+    const comment = String(data[i][2])
+      .replace(/\n/g, "<br>");
+
     html += `
       <div>
         <b>${data[i][1]}</b><br>
-        ${data[i][2]}
+        ${comment}
         <hr>
       </div>
     `;
