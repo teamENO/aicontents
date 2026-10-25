@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>コメント一覧</title>
 
 <style>
+
 body{
   background:#f5f7fa;
-  padding:20px;
   font-family:sans-serif;
+  padding:20px;
 }
 
 .container{
-  max-width:800px;
+  max-width:900px;
   margin:auto;
 }
 
 .comment{
   background:white;
+  border-radius:12px;
   padding:15px;
   margin-bottom:12px;
-  border-radius:12px;
   box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
@@ -37,8 +39,9 @@ body{
   margin-top:5px;
 }
 
-.comment-name.admin{
-  background:linear-gradient(
+.comment-name.owner{
+  background:
+  linear-gradient(
     90deg,
     #ffd700,
     #fff176,
@@ -47,16 +50,18 @@ body{
 
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  font-weight:700;
+
+  font-weight:bold;
 }
 
 .comment-text{
   margin-top:8px;
   line-height:1.7;
 }
-</style>
-</head>
 
+</style>
+
+</head>
 <body>
 
 <div class="container">
@@ -75,6 +80,7 @@ const API_URL =
 "https://script.google.com/macros/s/AKfycbzh8H0pzgkAJ1jUOW1POgQRuS6malzSD69hbMc-39WiVi7POo23paWHTThWt5FCb_Nj5Q/exec";
 
 function escapeHtml(str){
+
   return String(str)
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
@@ -105,9 +111,8 @@ async function loadComments(){
       escapeHtml(data[i][2])
       .replace(/\r?\n/g,"<br>");
 
-    const isAdmin =
-      data[i][3] === true ||
-      data[i][3] === "TRUE";
+    const isOwner =
+      name.toUpperCase() === "Owner";
 
     html += `
       <div class="comment">
@@ -116,9 +121,8 @@ async function loadComments(){
           ${date}
         </div>
 
-        <div class="comment-name ${isAdmin ? "admin" : ""}">
-          ${isAdmin ? " " : ""}
-          ${name}
+        <div class="comment-name ${isOwner ? "Owner" : ""}">
+          ${isOwner ? " Owner" : name}
         </div>
 
         <div class="comment-text">
@@ -134,7 +138,7 @@ async function loadComments(){
 }
 
 loadComments();
-setInterval(loadComments, 5000);
+setInterval(loadComments,2000);
 
 </script>
 
