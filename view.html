@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+
+<h2>コメント一覧</h2>
+<div id="comments"></div>
+
+<script>
+async function loadComments() {
+
+  const response =
+    await fetch("https://script.google.com/macros/s/AKfycbzh8H0pzgkAJ1jUOW1POgQRuS6malzSD69hbMc-39WiVi7POo23paWHTThWt5FCb_Nj5Q/exec");
+
+  const data = await response.json();
+
+  let html = "";
+
+  for(let i = 1; i < data.length; i++) {
+    html += `
+      <div>
+        <b>${data[i][1]}</b><br>
+        ${data[i][2]}
+        <hr>
+      </div>
+    `;
+  }
+
+  document.getElementById("comments").innerHTML = html;
+}
+
+loadComments();
+</script>
+
+</body>
+</html>
