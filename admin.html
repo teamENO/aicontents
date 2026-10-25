@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>管理者投稿</title>
+<title>Admin投稿</title>
 
 <style>
 body{
@@ -25,16 +24,13 @@ body{
   border-radius:12px;
 }
 
-input,textarea{
+textarea{
   width:100%;
+  min-height:150px;
   padding:12px;
   box-sizing:border-box;
   border:none;
   border-radius:8px;
-}
-
-textarea{
-  min-height:150px;
 }
 
 button{
@@ -45,21 +41,21 @@ button{
   background:gold;
   color:black;
   font-weight:bold;
+  cursor:pointer;
 }
 </style>
-</head>
 
+</head>
 <body>
 
 <div class="container">
 <div class="card">
 
-<h2>👑 Admin投稿</h2>
+<h2>👑 OWNER投稿</h2>
 
-
-
-<textarea id="comment"
-placeholder="コメント"></textarea>
+<textarea
+id="comment"
+placeholder="コメントを入力"></textarea>
 
 <br><br>
 
@@ -71,6 +67,12 @@ placeholder="コメント"></textarea>
 </div>
 
 <script>
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbzh8H0pzgkAJ1jUOW1POgQRuS6malzSD69hbMc-39WiVi7POo23paWHTThWt5FCb_Nj5Q/exec";
+
+const ADMIN_PASSWORD = "owner";
+
 async function send(){
 
   const comment =
@@ -81,30 +83,37 @@ async function send(){
     return;
   }
 
-  try {
+  try{
 
-    const response = await fetch(API_URL,{
-      method:"POST",
-      body:JSON.stringify({
-        name:"OWNER",
-        comment:comment,
-        adminPassword:"owner"
-      })
-    });
+    const response = await fetch(
+      API_URL,
+      {
+        method:"POST",
+        body:JSON.stringify({
+          name:"OWNER",
+          comment:comment,
+          adminPassword:ADMIN_PASSWORD
+        })
+      }
+    );
 
-    const result = await response.text();
+    const result =
+      await response.json();
 
     console.log(result);
-    alert("送信成功\n" + result);
 
     document.getElementById("comment").value="";
 
-  } catch(error){
+    alert("投稿しました");
+
+  }catch(error){
 
     console.error(error);
     alert("送信失敗");
   }
-}</script>
+}
+
+</script>
 
 </body>
 </html>
