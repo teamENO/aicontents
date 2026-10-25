@@ -80,27 +80,27 @@ const ADMIN_PASSWORD =
 
 async function send(){
 
-  const name =
-    document.getElementById("name").value.trim();
-
   const comment =
     document.getElementById("comment").value.trim();
 
-  await fetch(API_URL,{
-  method:"POST",
-  body:JSON.stringify({
-    name: "OWNER",
-    comment,
-    adminPassword: ADMIN_PASSWORD
-  })
-});
+  if(!comment){
+    alert("コメントを入力してください");
+    return;
+  }
 
-  document.getElementById("name").value="";
+  await fetch(API_URL,{
+    method:"POST",
+    body:JSON.stringify({
+      name:"OWNER",
+      comment,
+      adminPassword:ADMIN_PASSWORD
+    })
+  });
+
   document.getElementById("comment").value="";
 
   alert("管理者コメントを投稿しました");
 }
-
 </script>
 
 </body>
